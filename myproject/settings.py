@@ -91,6 +91,7 @@ CORS_ALLOWED_ORIGINS = [
     "https://hr-frontend-vymh-kaiyperuc-lisha183s-projects.vercel.app",
     "https://hr-frontend-vymh-b6kkgdpwv-lisha183s-projects.vercel.app",
     "https://hr-frontend-vymh-bm82txnrl-lisha183s-projects.vercel.app",
+    "https://hr-frontend-vymh-aum6g52u8-lisha183s-projects.vercel.app",
 ]
 # CORS_ALLOW_ALL_ORIGINS = True
 CSRF_TRUSTED_ORIGINS = [
@@ -100,6 +101,7 @@ CSRF_TRUSTED_ORIGINS = [
     "https://hr-frontend-vymh-kaiyperuc-lisha183s-projects.vercel.app",
     "https://hr-frontend-vymh-b6kkgdpwv-lisha183s-projects.vercel.app",
     "https://hr-frontend-vymh-bm82txnrl-lisha183s-projects.vercel.app",
+    "https://hr-frontend-vymh-aum6g52u8-lisha183s-projects.vercel.app",
 
 ]
 
