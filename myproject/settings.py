@@ -23,8 +23,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-=x&1okkhilg6cebag7c=zu17wqr(b8u$v=l$xpu^j9%#9rmyxf'
 
 DEBUG = True
-CSRF_COOKIE_SECURE = False
-SESSION_COOKIE_SECURE = False
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -87,15 +87,16 @@ CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173", 
     "http://localhost:5174",
-    "https://hr-frontend-nbkexoywm-lisha183s-projects.vercel.app"
+    "https://hr-frontend-nbkexoywm-lisha183s-projects.vercel.app",
+    "https://hr-frontend-vymh-kaiyperuc-lisha183s-projects.vercel.app"
 ]
 # CORS_ALLOW_ALL_ORIGINS = True
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5173", 
     "http://127.0.0.1:8000",
     "http://localhost:5174",
-    "https://hr-frontend-nbkexoywm-lisha183s-projects.vercel.app"
-
+    "https://hr-frontend-nbkexoywm-lisha183s-projects.vercel.app",
+    "https://hr-frontend-vymh-kaiyperuc-lisha183s-projects.vercel.app",
 
 ]
 
