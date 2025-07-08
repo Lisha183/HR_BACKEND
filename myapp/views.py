@@ -1,4 +1,4 @@
-from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth import login, logout, authenticate, get_user_model
 from django.middleware.csrf import get_token
 from django.http import JsonResponse, Http404
 from django.views.decorators.csrf import ensure_csrf_cookie
@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from rest_framework import status, generics
 from rest_framework.permissions import AllowAny, IsAuthenticated, BasePermission, IsAdminUser
 from rest_framework.exceptions import PermissionDenied, ValidationError
-from .models import CustomUser, EmployeeProfile, LeaveRequest, Payroll, AttendanceRecord, Department, SelfAssessment 
+from .models import CustomUser, EmployeeProfile, LeaveRequest, Payroll, AttendanceRecord, Department, SelfAssessment,  MeetingSlot
 from .serializers import (
     RegisterSerializer,
     LoginSerializer,
@@ -19,11 +19,17 @@ from .serializers import (
     CustomUserSerializer,
     UserApprovalSerializer,
     DepartmentSerializer,
-    SelfAssessmentSerializer 
+    SelfAssessmentSerializer,
+    MeetingSlotSerializer, 
+    UserSerializer
 )
-from .permissions import IsOwnerOrAdmin
+from .permissions import IsOwnerOrAdmin, IsEmployeeUser
+from django.db import models 
+from django.db.models import Q 
+from .utils import send_meeting_notification_email 
 
 
+User = get_user_model()
 @ensure_csrf_cookie
 def csrf_test(request):
     return JsonResponse({"detail": "CSRF cookie set"})
@@ -83,33 +89,32 @@ class DepartmentDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAdminUser]
 
 
+
 class EmployeeProfileList(generics.ListCreateAPIView):
     queryset = EmployeeProfile.objects.all().select_related('user', 'department').order_by('full_name', 'id')
     serializer_class = EmployeeProfileSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        if self.request.user.is_staff:
+        if self.request.user.is_staff or getattr(self.request.user, "is_hr", False):
             return EmployeeProfile.objects.all().select_related('user', 'department').order_by('full_name', 'id')
-        return EmployeeProfile.objects.filter(user=self.request.user).select_related('user', 'department').order_by('full_name', 'id')
+        elif self.request.user.is_authenticated:
+            return EmployeeProfile.objects.filter(user=self.request.user).select_related('user', 'department').order_by('full_name', 'id')
+        return EmployeeProfile.objects.none()
 
     def perform_create(self, serializer):
         if not self.request.user.is_staff:
-            if EmployeeProfile.objects.filter(user=self.request.user).exists():
-                raise ValidationError({"detail": "You already have an employee profile."})
-            serializer.save(user=self.request.user)
-        elif self.request.user.is_staff:
-            user_id = self.request.data.get('user')
-            if not user_id:
-                raise ValidationError({"user": "User ID is required for admin to create an employee profile."})
-            try:
-                target_user = CustomUser.objects.get(id=user_id)
-            except CustomUser.DoesNotExist:
-                raise ValidationError({"user": "User with this ID does not exist."})
-            serializer.save(user=target_user)
-        else:
-            raise PermissionDenied("You do not have permission to create employee profiles.")
+            raise PermissionDenied("Only admins can create employee profiles.")
 
+        username = self.request.data.get('username')
+        if not username:
+            raise ValidationError({"username": "Username is required to create an employee profile."})
+
+        try:
+            target_user = CustomUser.objects.get(username=username)
+        except CustomUser.DoesNotExist:
+            raise ValidationError({"username": "User with this username does not exist."})
+        serializer.save(user=target_user)
 
 class EmployeeProfileDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = EmployeeProfile.objects.all().select_related('user', 'department')
@@ -335,35 +340,57 @@ class AdminUserApprovalDetailView(generics.RetrieveUpdateAPIView):
 
 class EmployeeSelfAssessmentListCreateView(generics.ListCreateAPIView):
     serializer_class = SelfAssessmentSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsEmployeeUser] 
 
     def get_queryset(self):
-        if self.request.user.is_staff: 
-             raise PermissionDenied("Admins should use the /admin/self-assessments/ endpoint to view all assessments.")
         return SelfAssessment.objects.filter(employee=self.request.user).order_by('-year', '-quarter_number')
 
     def perform_create(self, serializer):
-        if not self.request.user.is_authenticated or self.request.user.is_staff:
-            raise PermissionDenied("Only authenticated employees can submit self-assessments.")
         
         quarter_number = serializer.validated_data.get('quarter_number')
         year = serializer.validated_data.get('year')
+
         if SelfAssessment.objects.filter(employee=self.request.user, quarter_number=quarter_number, year=year).exists():
             raise ValidationError(
                 {"detail": f"A self-assessment for Q{quarter_number} {year} already exists for you. You can only submit one per quarter/year."}
             )
 
+     
         serializer.save(employee=self.request.user, status='Pending HR Review')
 
 
+
 class AdminSelfAssessmentListView(generics.ListAPIView):
-    queryset = SelfAssessment.objects.all().select_related('employee', 'reviewed_by').order_by('-year', '-quarter_number', 'employee__username')
     serializer_class = SelfAssessmentSerializer
     permission_classes = [IsAdminUser]
 
+    def get_queryset(self):
+        queryset = SelfAssessment.objects.all().select_related('employee', 'reviewed_by').order_by(
+            '-year', '-quarter_number', 'employee__username'
+        )
+
+        employee_username = self.request.query_params.get('employee_username')
+        quarter_number = self.request.query_params.get('quarter_number')
+        year = self.request.query_params.get('year')
+        status = self.request.query_params.get('status')
+
+        if employee_username:
+            queryset = queryset.filter(employee__username__icontains=employee_username)
+
+        if quarter_number:
+            queryset = queryset.filter(quarter_number=quarter_number)
+
+        if year:
+            queryset = queryset.filter(year=year)
+
+        if status:
+            queryset = queryset.filter(status=status)
+
+        return queryset
+
+
 
 class AdminSelfAssessmentDetailView(generics.RetrieveUpdateDestroyAPIView):
-
     queryset = SelfAssessment.objects.all().select_related('employee', 'reviewed_by')
     serializer_class = SelfAssessmentSerializer
     permission_classes = [IsAdminUser]
@@ -374,23 +401,280 @@ class AdminSelfAssessmentDetailView(generics.RetrieveUpdateDestroyAPIView):
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)
 
+        print("Validated data for update:", serializer.validated_data)
+
         if request.user.is_staff:
             if 'hr_rating' in serializer.validated_data or \
                'hr_feedback' in serializer.validated_data or \
                serializer.validated_data.get('status') == 'Completed':
-                
-                instance.reviewed_by = request.user 
+
+                instance.reviewed_by = request.user
                 if serializer.validated_data.get('status') == 'Completed' and not instance.reviewed_at:
-                    instance.reviewed_at = timezone.now() 
+                    instance.reviewed_at = timezone.now()
+                    
 
-        self.perform_update(serializer)
+        for attr, value in serializer.validated_data.items():
+            setattr(instance, attr, value)
+
+        print(f"Instance before save - status: {instance.status}, hr_rating: {instance.hr_rating}, hr_feedback: {instance.hr_feedback}")
+
+        instance.save()
+
+        serializer = self.get_serializer(instance)
+
         return Response(serializer.data)
-
-    def perform_destroy(self, instance):
-        super().perform_destroy(instance)
-
 
 class EmployeeUserListView(generics.ListAPIView):
     queryset = CustomUser.objects.filter(role='employee').order_by('username')
     serializer_class = CustomUserSerializer 
     permission_classes = [IsAdminUser]
+
+
+
+
+
+class MeetingSlotListCreateView(generics.ListCreateAPIView):
+
+    queryset = MeetingSlot.objects.all().select_related('hr_reviewer', 'booked_by_employee', 'self_assessment')
+    serializer_class = MeetingSlotSerializer
+    permission_classes = [IsAdminUser]
+
+    def perform_create(self, serializer):
+
+        if not self.request.user.is_staff:
+            raise PermissionDenied("Only HR/Admin users can create meeting slots.")
+
+        self_assessment_id = serializer.validated_data.get('self_assessment')
+        if self_assessment_id:
+            if MeetingSlot.objects.filter(self_assessment=self_assessment_id).exists():
+                raise ValidationError({"self_assessment": "A meeting slot for this self-assessment already exists."})
+
+        serializer.save(hr_reviewer=self.request.user)
+
+
+class MeetingSlotDetailView(generics.RetrieveUpdateDestroyAPIView):
+  
+    queryset = MeetingSlot.objects.all().select_related('hr_reviewer', 'booked_by_employee', 'self_assessment')
+    serializer_class = MeetingSlotSerializer
+    permission_classes = [IsAdminUser] 
+
+    def perform_update(self, serializer):
+
+        instance = self.get_object()
+        is_booked_before = instance.is_booked
+        is_booked_after = serializer.validated_data.get('is_booked', is_booked_before)
+
+        if not self.request.user.is_staff:
+
+            if is_booked_before and not is_booked_after and instance.booked_by_employee == self.request.user:
+                 raise PermissionDenied("Employees cannot unbook slots through this admin endpoint.")
+
+        if is_booked_before and not is_booked_after and self.request.user.is_staff:
+            serializer.validated_data['booked_by_employee'] = None
+            serializer.validated_data['is_booked'] = False
+
+        serializer.save()
+
+
+class EmployeeMeetingSlotListView(generics.ListAPIView):
+
+    queryset = MeetingSlot.objects.filter(is_booked=False).select_related('hr_reviewer').order_by('date', 'start_time')
+    serializer_class = MeetingSlotSerializer
+    permission_classes = [IsAuthenticated] 
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+
+        hr_username = self.request.query_params.get('hr_username', None)
+        if hr_username:
+            queryset = queryset.filter(hr_reviewer__username__icontains=hr_username)
+
+        self_assessment_id = self.request.query_params.get('self_assessment_id', None)
+        if self_assessment_id:
+            try:
+                queryset = queryset.filter(self_assessment_id=int(self_assessment_id))
+            except ValueError:
+                raise ValidationError({"self_assessment_id": "Invalid self_assessment_id. Must be an integer."})
+
+        current_datetime = timezone.now()
+        queryset = queryset.filter(date__gte=current_datetime.date()).filter(
+            models.Q(date=current_datetime.date(), start_time__gte=current_datetime.time()) | models.Q(date__gt=current_datetime.date())
+        )
+
+        return queryset
+
+class EmployeeMyBookingsListView(generics.ListAPIView):
+
+    serializer_class = MeetingSlotSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        if not self.request.user.is_authenticated or self.request.user.is_staff:
+          
+            return MeetingSlot.objects.none() 
+
+        queryset = MeetingSlot.objects.filter(
+            is_booked=True,
+            booked_by_employee=self.request.user
+        ).select_related('hr_reviewer', 'self_assessment').order_by('-date', '-start_time') 
+        current_datetime = timezone.now()
+        queryset = queryset.filter(
+            Q(date__gt=current_datetime.date()) |
+            Q(date=current_datetime.date(), start_time__gte=current_datetime.time())
+        )
+        return queryset
+
+class BookMeetingSlotView(generics.UpdateAPIView):
+
+    queryset = MeetingSlot.objects.all()
+    serializer_class = MeetingSlotSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        queryset = self.get_queryset()
+        obj = generics.get_object_or_404(queryset, pk=self.kwargs['pk'])
+        self.check_object_permissions(self.request, obj)
+        return obj
+
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+
+        if request.user.is_staff:
+            raise PermissionDenied("Admin users cannot book slots through this endpoint.")
+
+        if instance.is_booked:
+            return Response({"detail": "This slot is already booked."}, status=status.HTTP_400_BAD_REQUEST)
+
+        current_datetime = timezone.now()
+        slot_datetime = timezone.make_aware(timezone.datetime.combine(instance.date, instance.start_time))
+        if slot_datetime < current_datetime:
+            return Response({"detail": "Cannot book a meeting slot in the past."}, status=status.HTTP_400_BAD_REQUEST)
+
+        if instance.booked_by_employee == request.user:
+            return Response({"detail": "You have already booked this slot."}, status=status.HTTP_200_OK)
+
+        if not SelfAssessment.objects.filter(employee=request.user).exists():
+            return Response(
+                {"detail": "You must have at least one self-assessment submitted to book a meeting slot.", "type": "info"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        if instance.self_assessment:
+            if instance.self_assessment.employee != request.user:
+                raise PermissionDenied(
+                    "This meeting slot is for a specific self-assessment that is not yours. You can only book slots linked to your own self-assessments."
+                )
+
+        instance.is_booked = True
+        instance.booked_by_employee = request.user
+        instance.save()
+
+        send_meeting_notification_email(instance, request.user, 'booked')
+
+
+        serializer = self.get_serializer(instance) 
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def patch(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+
+    def put(self, request, *args, **kwargs):
+        return Response({"detail": "PUT method not allowed for booking. Use PATCH."}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+
+class UnbookMeetingSlotView(generics.UpdateAPIView):
+
+    queryset = MeetingSlot.objects.all()
+    serializer_class = MeetingSlotSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        queryset = self.get_queryset()
+        obj = generics.get_object_or_404(queryset, pk=self.kwargs['pk'])
+        self.check_object_permissions(self.request, obj)
+        return obj
+
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+
+        if request.user.is_staff:
+            raise PermissionDenied("Admin users cannot unbook slots through this endpoint. They manage via MeetingSlotDetailView.")
+
+        if not instance.is_booked:
+            return Response({"detail": "This slot is not currently booked."}, status=status.HTTP_400_BAD_REQUEST)
+
+        if instance.booked_by_employee != request.user:
+            return Response({"detail": "You can only unbook slots that you have booked."}, status=status.HTTP_403_FORBIDDEN)
+
+        current_datetime = timezone.now()
+        slot_datetime = timezone.make_aware(timezone.datetime.combine(instance.date, instance.start_time))
+        if slot_datetime < current_datetime:
+            return Response({"detail": "Cannot unbook a meeting slot that is in the past."}, status=status.HTTP_400_BAD_REQUEST)
+
+        instance.is_booked = False
+        instance.booked_by_employee = None
+        instance.save()
+
+        send_meeting_notification_email(instance, request.user, 'unbooked') 
+
+
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def patch(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+
+    def put(self, request, *args, **kwargs):
+        return Response({"detail": "PUT method not allowed for unbooking. Use PATCH."}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+class EmployeeProfileByUsernameView(generics.RetrieveAPIView):
+    serializer_class = EmployeeProfileSerializer
+
+    def get_queryset(self):
+        return EmployeeProfile.objects.select_related('user')
+
+    def get_object(self):
+        username = self.kwargs['username']
+        return self.get_queryset().get(user__username=username)
+
+class AdminUserListView(generics.ListAPIView):
+    queryset = User.objects.all() 
+    serializer_class = UserSerializer
+    permission_classes = [IsAdminUser]
+
+    def get_queryset(self):
+   
+        return User.objects.all()
+
+
+class HRUserListView(generics.ListAPIView):
+   
+    queryset = User.objects.filter(is_staff=True).order_by('username') 
+    serializer_class = UserSerializer 
+    permission_classes = [IsAuthenticated] 
+
+    def get_queryset(self):
+    
+        return super().get_queryset()
+
+
+
+class DepartmentList(generics.ListAPIView):
+    queryset = Department.objects.all()
+    serializer_class = DepartmentSerializer
+
+class LeaveRequestList(generics.ListAPIView):
+    queryset = LeaveRequest.objects.all()
+    serializer_class = LeaveRequestSerializer
+
+
+class EmployeeProfileMeView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        try:
+            profile = EmployeeProfile.objects.select_related('user', 'department').get(user=request.user)
+            serializer = EmployeeProfileSerializer(profile)
+            return Response(serializer.data)
+        except EmployeeProfile.DoesNotExist:
+            return Response({"detail": "Employee profile not found."}, status=status.HTTP_404_NOT_FOUND)

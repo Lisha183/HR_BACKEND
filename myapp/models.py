@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
 from django.core.validators import MinValueValidator, MaxValueValidator
+from django.db.models import JSONField
+from decimal import Decimal
 
 
 class CustomUser(AbstractUser):
@@ -178,15 +180,50 @@ class Payroll(models.Model):
     )
     pay_period_start = models.DateField(
         help_text='Start date of the pay period.'
+    
     )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+
+    social_security_deduction = models.DecimalField(
+    max_digits=10,
+    decimal_places=2,
+    default=0.00,
+    help_text='Social security deduction for the period.'
+)
+
+    tax_deduction = models.DecimalField(
+    max_digits=10,
+    decimal_places=2,
+    default=0.00,  
+    help_text='Tax deduction for the period.'
+)
+
     pay_period_end = models.DateField(
         help_text='End date of the pay period.'
     )
+    basic_salary = models.DecimalField(max_digits=10, decimal_places=2, help_text='Basic salary of the employee.')
+
     gross_pay = models.DecimalField(
         max_digits=10,
         decimal_places=2,
         help_text='Gross pay for the period.'
     )
+  
+
+    bonuses = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=Decimal('0.00'),
+        help_text='Bonuses for the pay period.'
+    )
+    allowances = models.DecimalField(
+    max_digits=10,
+    decimal_places=2,
+    default=0.00,
+    help_text='Allowances for the period.'
+)
     deductions = models.DecimalField(
         max_digits=10,
         decimal_places=2,
@@ -201,6 +238,8 @@ class Payroll(models.Model):
     payout_date = models.DateField(
         help_text='Date the payroll was paid out.'
     )
+  
+
 
     class Meta:
         verbose_name = "Payroll Record"
@@ -275,14 +314,11 @@ class SelfAssessment(models.Model):
     year = models.IntegerField(
         help_text='The year for this assessment (e.g., 2025).'
     )
+    employee_answers = JSONField(
+        default=list, 
+        help_text='JSON array of employee self-assessment answers. Each object must have question_id and rating.'
+    )
 
-    employee_rating = models.IntegerField(
-        choices=RATING_CHOICES,
-        help_text='Employee’s self-rating for the quarter.'
-    )
-    employee_comments = models.TextField(
-        help_text='Employee’s comments on their performance for the quarter.'
-    )
     submitted_at = models.DateTimeField(
         auto_now_add=True,
         help_text='Timestamp when the employee submitted the self-assessment.'
@@ -332,3 +368,40 @@ class SelfAssessment(models.Model):
         if self.hr_rating is not None and self.hr_feedback and self.status == 'Completed' and not self.reviewed_at:
             self.reviewed_at = timezone.now()
         super().save(*args, **kwargs)
+
+
+class MeetingSlot(models.Model):
+
+    hr_reviewer = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='scheduled_meetings',
+                                   limit_choices_to={'is_staff': True}, 
+                                   help_text="The HR/Admin user who scheduled this meeting slot.")
+    
+    date = models.DateField(help_text="Date of the meeting slot.")
+    start_time = models.TimeField(help_text="Start time of the meeting slot.")
+    end_time = models.TimeField(help_text="End time of the meeting slot.")
+    
+    is_booked = models.BooleanField(default=False,
+                                    help_text="Indicates if the slot has been booked by an employee.")
+    booked_by_employee = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, blank=True,
+                                           related_name='booked_meeting_slots',
+                                           limit_choices_to={'role': 'employee'}, 
+                                           help_text="The employee who booked this meeting slot (if booked).")
+    
+    self_assessment = models.OneToOneField(SelfAssessment, on_delete=models.SET_NULL, null=True, blank=True,
+                                           related_name='meeting_slot',
+                                           help_text="The self-assessment this meeting is for (optional).")
+
+    created_at = models.DateTimeField(auto_now_add=True, help_text="Timestamp when the slot was created.")
+    updated_at = models.DateTimeField(auto_now=True, help_text="Timestamp when the slot was last updated.")
+
+    class Meta:
+        verbose_name = "Meeting Slot"
+        verbose_name_plural = "Meeting Slots"
+        ordering = ['date', 'start_time'] 
+        unique_together = ('hr_reviewer', 'date', 'start_time')
+
+    def __str__(self):
+        status_str = "Booked" if self.is_booked else "Available"
+        employee_str = f" by {self.booked_by_employee.username}" if self.booked_by_employee else ""
+        return f"{self.date} {self.start_time}-{self.end_time} ({status_str}{employee_str})"
+

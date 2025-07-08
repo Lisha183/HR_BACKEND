@@ -173,3 +173,16 @@ AUTH_USER_MODEL = 'myapp.CustomUser'
 MEDIA_URL = '/media/' 
 
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+
+EMAIL_HOST = 'sandbox.smtp.mailtrap.io' 
+EMAIL_PORT = 587                 
+EMAIL_USE_TLS = True              
+EMAIL_HOST_USER = '15216b6f087242'
+EMAIL_HOST_PASSWORD = '51cfdda9f2ae7f'
+
+DEFAULT_FROM_EMAIL = 'info@myhrportal.local'
+SERVER_EMAIL = DEFAULT_FROM_EMAIL 
+BASE_URL = 'http://localhost:5173'
+

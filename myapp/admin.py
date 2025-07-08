@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import CustomUser, EmployeeProfile, LeaveRequest, Payroll, AttendanceRecord, Department
+from .models import CustomUser, EmployeeProfile, LeaveRequest, Payroll, AttendanceRecord, Department,MeetingSlot
 from django.utils import timezone
 
 @admin.register(CustomUser)
@@ -72,3 +72,12 @@ class AttendanceRecordAdmin(admin.ModelAdmin):
     list_filter = ('record_type', 'timestamp')
     search_fields = ('employee__username',)
     raw_id_fields = ('employee',)
+
+
+@admin.register(MeetingSlot)
+class MeetingSlotAdmin(admin.ModelAdmin):
+    list_display = ('date', 'start_time', 'end_time', 'hr_reviewer', 'is_booked', 'booked_by_employee', 'self_assessment', 'created_at')
+    list_filter = ('is_booked', 'date', 'hr_reviewer', 'booked_by_employee')
+    search_fields = ('hr_reviewer__username', 'booked_by_employee__username', 'self_assessment__employee__username')
+    raw_id_fields = ('hr_reviewer', 'booked_by_employee', 'self_assessment') 
+    readonly_fields = ('created_at', 'updated_at') 

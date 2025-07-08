@@ -17,3 +17,14 @@ class IsOwnerOrAdmin(permissions.BasePermission):
 
     def has_permission(self, request, view):
         return request.user and request.user.is_authenticated
+
+
+class IsEmployeeUser(permissions.BasePermission):
+
+    def has_permission(self, request, view):
+        return request.user and request.user.is_authenticated and request.user.role == 'employee'
+
+    def has_object_permission(self, request, view, obj):
+        if request.user and request.user.is_authenticated and request.user.role == 'employee':
+            return hasattr(obj, 'employee') and obj.employee == request.user.employee_profile
+        return False 

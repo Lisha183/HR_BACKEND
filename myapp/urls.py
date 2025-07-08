@@ -21,9 +21,20 @@ from .views import (
     AdminUserApprovalDetailView,
     DepartmentListCreateView,
     DepartmentDetailView,
+    AdminUserListView ,
     EmployeeSelfAssessmentListCreateView,
     AdminSelfAssessmentListView,
     AdminSelfAssessmentDetailView,
+    MeetingSlotListCreateView,
+    MeetingSlotDetailView,
+    EmployeeMeetingSlotListView,
+    BookMeetingSlotView,
+    UnbookMeetingSlotView,
+    EmployeeProfileByUsernameView,
+    EmployeeMyBookingsListView,
+    HRUserListView,
+    EmployeeProfileList, DepartmentList, LeaveRequestList
+
 
 )
 
@@ -36,11 +47,16 @@ urlpatterns = [
 
     path('employee-profiles/', EmployeeProfileList.as_view(), name='employee-profile-list'),
     path('employee-profiles/<int:pk>/', EmployeeProfileDetail.as_view(), name='employee-profile-detail'),
+    path('admin/employee-profiles/by-username/<str:username>/', EmployeeProfileByUsernameView.as_view(), name='employee-profile-by-username'),
+    path('admin/users/', AdminUserListView.as_view(), name='admin-user-list'),
+    
+
 
     path('employee/leave-requests/', EmployeeLeaveRequestListCreateView.as_view(), name='employee-leave-request-list-create'),
     path('employee/leave-requests/<int:pk>/', EmployeeLeaveRequestDetailView.as_view(), name='employee-leave-request-detail'),
     path('admin/leave-requests/', AdminLeaveRequestListView.as_view(), name='admin-leave-request-list'),
     path('admin/leave-requests/<int:pk>/', AdminLeaveRequestDetailView.as_view(), name='admin-leave-request-detail'),
+    
 
     path('admin/payroll/', AdminPayrollListCreate.as_view(), name='admin-payroll-list-create'),
     path('admin/payroll/<int:pk>/', AdminPayrollDetail.as_view(), name='admin-payroll-detail'),
@@ -59,6 +75,25 @@ urlpatterns = [
     path('employee/self-assessments/', EmployeeSelfAssessmentListCreateView.as_view(), name='employee-self-assessment-list-create'),
     path('admin/self-assessments/', AdminSelfAssessmentListView.as_view(), name='admin-self-assessment-list'),
     path('admin/self-assessments/<int:pk>/', AdminSelfAssessmentDetailView.as_view(), name='admin-self-assessment-detail'),
+
+    path('admin/meeting-slots/', MeetingSlotListCreateView.as_view(), name='admin-meeting-slot-list-create'),
+    path('admin/meeting-slots/<int:pk>/', MeetingSlotDetailView.as_view(), name='admin-meeting-slot-detail'),
+    
+    path('employee/meeting-slots/', EmployeeMeetingSlotListView.as_view(), name='employee-meeting-slot-list'),
+    
+    path('employee/meeting-slots/<int:pk>/book/', BookMeetingSlotView.as_view(), name='employee-book-meeting-slot'),
+    path('employee/meeting-slots/<int:pk>/unbook/', UnbookMeetingSlotView.as_view(), name='employee-unbook-meeting-slot'),
+    path('employee/meeting-slots/', EmployeeMeetingSlotListView.as_view(), name='employee-available-meeting-slots'),
+    path('employee/meeting-slots/<int:pk>/book/', BookMeetingSlotView.as_view(), name='book-meeting-slot'),
+    path('employee/meeting-slots/<int:pk>/unbook/', UnbookMeetingSlotView.as_view(), name='unbook-meeting-slot'),
+    path('employee/my-booked-slots/', EmployeeMyBookingsListView.as_view(), name='employee-my-booked-slots'),
+
+    path('hr-users/', HRUserListView.as_view(), name='hr-user-list'), 
+    path('api/employee-profiles/', EmployeeProfileList.as_view(), name='employee-profile-list'),
+    path('api/departments/', DepartmentList.as_view(), name='department-list'),
+    path('api/leave-requests/', LeaveRequestList.as_view(), name='leave-request-list'),
+
+
 
 
 
