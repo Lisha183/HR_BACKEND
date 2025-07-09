@@ -30,6 +30,8 @@ SESSION_COOKIE_AGE = 60 * 60 * 24 * 7  # 1 week
  # allow cross-site cookies
 CSRF_COOKIE_SECURE = True
 CSRF_COOKIE_SAMESITE = 'None'
+CSRF_USE_SESSIONS = True
+SECURE_REFERRER_POLICY = 'no-referrer-when-downgrade'
 
 ALLOWED_HOSTS = ['*']
 
@@ -110,6 +112,24 @@ CSRF_TRUSTED_ORIGINS = [
     "https://hr-frontend-vymh-aum6g52u8-lisha183s-projects.vercel.app",
     "https://hr-frontend-vymh-c5x41m696-lisha183s-projects.vercel.app"
 
+]
+CORS_ALLOW_HEADERS = [
+    'content-type',
+    'x-csrftoken',
+    'authorization',
+    'accept',
+    'origin',
+    'user-agent',
+    'accept-encoding',
+    'accept-language',
+    'dnt',
+    'cache-control',
+    'x-requested-with',
+]
+
+CORS_EXPOSE_HEADERS = [
+    'Content-Type',
+    'X-CSRFToken',
 ]
 
 ROOT_URLCONF = 'myproject.urls'
