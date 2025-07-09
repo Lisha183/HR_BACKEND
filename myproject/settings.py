@@ -22,9 +22,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-=x&1okkhilg6cebag7c=zu17wqr(b8u$v=l$xpu^j9%#9rmyxf'
 
-DEBUG = True
+DEBUG = False
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_SAMESITE = 'None'  
+SESSION_COOKIE_AGE = 60 * 60 * 24 * 7  # 1 week
+ # allow cross-site cookies
+CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_SAMESITE = 'None'
 
 ALLOWED_HOSTS = ['*']
 
