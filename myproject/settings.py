@@ -22,9 +22,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-=x&1okkhilg6cebag7c=zu17wqr(b8u$v=l$xpu^j9%#9rmyxf'
 
-DEBUG = True
-CSRF_COOKIE_SECURE = False
-SESSION_COOKIE_SECURE = False
+DEBUG = False
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+SECURE_SSL_REDIRECT = True 
 
 ALLOWED_HOSTS = ['*']
 
@@ -149,21 +150,26 @@ WSGI_APPLICATION = 'myproject.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    'default': dj_database_url.parse("postgresql://hr_ppx1_user:0ZgbhSucRI4NX138ZumPANaSvJs9hxuj@dpg-d1mp4824d50c738kqf3g-a.oregon-postgres.render.com/hr_ppx1")
+    'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))
 }
+
+# DATABASES = {
+#     'default': dj_database_url.parse("postgresql://hr_ppx1_user:0ZgbhSucRI4NX138ZumPANaSvJs9hxuj@dpg-d1mp4824d50c738kqf3g-a.oregon-postgres.render.com/hr_ppx1")
+# }
+
 # DATABASES = {
 #     'default': dj_database_url.parse("postgresql://photo_hub_l1kt_user:i43WP24xEaG9jfQ1tKrp9TdwIXSEjW7r@dpg-d0tkrl6mcj7s73dllpp0-a.oregon-postgres.render.com/photo_hub_l1kt")
+# # }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'hr',
+#         'USER': 'alicia',
+#         'PASSWORD': '123456',
+#         'HOST': 'localhost',
+#         'PORT': '5432',
+#     }
 # }
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'hr_db',
-        'USER': 'alicia',
-        'PASSWORD': '123456',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
-}
 
 
 AUTH_PASSWORD_VALIDATORS = [
