@@ -100,7 +100,7 @@ CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5174",
     "https://hr-frontend-vymh-kaiyperuc-lisha183s-projects.vercel.app",
     "https://hr-frontend-vymh-dd5xi82t7-lisha183s-projects.vercel.app",
-    "https://hr-frontend-vymh-8nzd85qmi-lisha183s-projects.vercel.app/"
+    "https://hr-frontend-vymh-8nzd85qmi-lisha183s-projects.vercel.app"
 
 
 ]
