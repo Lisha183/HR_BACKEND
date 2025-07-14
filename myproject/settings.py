@@ -110,17 +110,11 @@ CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://localhost:5174",
-    "https://hr-frontend-nbkexoywm-lisha183s-projects.vercel.app",
-    "https://hr-frontend-vymh-dd5xi82t7-lisha183s-projects.vercel.app",
-    "https://hr-frontend-vymh-8nzd85qmi-lisha183s-projects.vercel.app",
-    "https://hr-frontend-vymh-1fsq9yc5j-lisha183s-projects.vercel.app",
-    "https://hr-frontend-vymh-orwuh83w6-lisha183s-projects.vercel.app",
-    "https://hr-frontend-vymh-kxhnjale6-lisha183s-projects.vercel.app",
-    "https://hr-frontend-vymh-1enyjb7xn-lisha183s-projects.vercel.app",
     "https://hr-frontend-i2q5.vercel.app",
     "https://hr-frontend-t1ab.vercel.app",
     "https://hr-frontend-x43g.vercel.app",
-    "https://hr-frontend-68ju.vercel.app"
+    "https://hr-frontend-68ju.vercel.app",
+    "https://hr-frontend-us1v.vercel.app"
 
 ]
 
@@ -129,16 +123,11 @@ CSRF_TRUSTED_ORIGINS = [
     "http://127.0.0.1:8000", 
     "http://localhost:5174",
     "https://hr-frontend-nbkexoywm-lisha183s-projects.vercel.app",
-    "https://hr-frontend-vymh-dd5xi82t7-lisha183s-projects.vercel.app",
-    "https://hr-frontend-vymh-8nzd85qmi-lisha183s-projects.vercel.app",
-    "https://hr-frontend-vymh-1fsq9yc5j-lisha183s-projects.vercel.app",
-    "https://hr-frontend-vymh-orwuh83w6-lisha183s-projects.vercel.app",
-    "https://hr-frontend-vymh-kxhnjale6-lisha183s-projects.vercel.app",
-    "https://hr-frontend-vymh-1enyjb7xn-lisha183s-projects.vercel.app",
     "https://hr-frontend-i2q5.vercel.app",
     "https://hr-frontend-t1ab.vercel.app",
     "https://hr-frontend-x43g.vercel.app",
-    "https://hr-frontend-68ju.vercel.app"
+    "https://hr-frontend-68ju.vercel.app",
+    "https://hr-frontend-us1v.vercel.app"
   
 ]
 
