@@ -347,6 +347,7 @@ CORS_ALLOWED_ORIGINS = [
     "https://hr-frontend-vymh-orwuh83w6-lisha183s-projects.vercel.app",
     "https://hr-frontend-vymh-kxhnjale6-lisha183s-projects.vercel.app",
     "https://hr-frontend-vymh-1enyjb7xn-lisha183s-projects.vercel.app",
+    "https://hr-frontend-i2q5.vercel.app"
     # If you have a custom domain for your frontend:
     # "https://www.yourhrplatform.com",
 ]
@@ -363,6 +364,7 @@ CSRF_TRUSTED_ORIGINS = [
     "https://hr-frontend-vymh-orwuh83w6-lisha183s-projects.vercel.app",
     "https://hr-frontend-vymh-kxhnjale6-lisha183s-projects.vercel.app",
     "https://hr-frontend-vymh-1enyjb7xn-lisha183s-projects.vercel.app",
+    "https://hr-frontend-i2q5.vercel.app"
     # If you have a custom domain for your frontend:
     # "https://www.yourhrplatform.com",
 ]
