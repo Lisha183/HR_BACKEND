@@ -26,7 +26,8 @@ DEBUG = False
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
 SECURE_SSL_REDIRECT = True 
-
+CSRF_COOKIE_SAMESITE = 'None'  # or 'None' if you need cross-site cookies
+SESSION_COOKIE_SAMESITE = 'Lax' 
 ALLOWED_HOSTS = ['*']
 
 
@@ -93,7 +94,8 @@ CORS_ALLOWED_ORIGINS = [
     "https://hr-frontend-vymh-8nzd85qmi-lisha183s-projects.vercel.app",
     "https://hr-frontend-vymh-1fsq9yc5j-lisha183s-projects.vercel.app",
     "https://hr-frontend-vymh-orwuh83w6-lisha183s-projects.vercel.app",
-    "https://hr-frontend-vymh-kxhnjale6-lisha183s-projects.vercel.app"
+    "https://hr-frontend-vymh-kxhnjale6-lisha183s-projects.vercel.app",
+    "https://hr-frontend-vymh-1enyjb7xn-lisha183s-projects.vercel.app"
    
 ]
 # CORS_ALLOW_ALL_ORIGINS = True
@@ -106,7 +108,8 @@ CSRF_TRUSTED_ORIGINS = [
     "https://hr-frontend-vymh-8nzd85qmi-lisha183s-projects.vercel.app",
     "https://hr-frontend-vymh-1fsq9yc5j-lisha183s-projects.vercel.app",
     "https://hr-frontend-vymh-orwuh83w6-lisha183s-projects.vercel.app",
-    "https://hr-frontend-vymh-kxhnjale6-lisha183s-projects.vercel.app"
+    "https://hr-frontend-vymh-kxhnjale6-lisha183s-projects.vercel.app",
+    "https://hr-frontend-vymh-1enyjb7xn-lisha183s-projects.vercel.app"
 
 
 ]
