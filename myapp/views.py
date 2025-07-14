@@ -27,13 +27,19 @@ from .permissions import IsOwnerOrAdmin, IsEmployeeUser
 from django.db import models 
 from django.db.models import Q 
 from .utils import send_meeting_notification_email 
+from django.middleware.csrf import get_token 
+
 
 
 User = get_user_model()
+
+# (Keep 'User = get_user_model()' if it's used elsewhere in your views.py)
+
 @ensure_csrf_cookie
 def csrf_test(request):
-    return JsonResponse({"detail": "CSRF cookie set"})
-
+    csrf_token_value = get_token(request)
+    
+    return JsonResponse({"detail": "CSRF cookie set", "csrfToken": csrf_token_value})
 class RegisterView(APIView):
     permission_classes = [AllowAny]
 

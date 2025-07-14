@@ -10,225 +10,7 @@
 # https://docs.djangoproject.com/en/5.2/ref/settings/
 # """
 
-# from pathlib import Path
-# import os
-# import cloudinary
-# import cloudinary.uploader
-# import cloudinary.api
-# import dj_database_url
 
-
-# BASE_DIR = Path(__file__).resolve().parent.parent
-
-# SECRET_KEY = 'django-insecure-=x&1okkhilg6cebag7c=zu17wqr(b8u$v=l$xpu^j9%#9rmyxf'
-
-# DEBUG = False
-# CSRF_COOKIE_SECURE = True
-# SESSION_COOKIE_SECURE = True
-# SECURE_SSL_REDIRECT = True 
-# CSRF_COOKIE_SAMESITE = 'None'  # or 'None' if you need cross-site cookies
-# SESSION_COOKIE_SAMESITE = 'Lax' 
-# ALLOWED_HOSTS = ['*']
-
-
-
-# INSTALLED_APPS = [
-#     'django.contrib.admin',
-#     'django.contrib.auth',
-#     'django.contrib.contenttypes',
-#     'django.contrib.sessions',
-#     'django.contrib.messages',
-#     'django.contrib.staticfiles',
-#     'myapp',
-#     'crispy_forms',
-#     'crispy_bootstrap5',
-#     'cloudinary',
-#     'rest_framework',
-#     'corsheaders'
-# ]
-# cloudinary.config(
-#     cloud_name = 'dj9mtneqk',
-#     api_key = '665738545262792',
-#     api_secret = 'Ve0AuYDPPMeFXCRKlX1_WHTpUvA'
-# )
-# CLOUDINARY_STORAGE = {
-#     'CLOUD_NAME': 'dj9mtneqk',
-#     'API_KEY': '665738545262792',
-#     'API_SECRET': 'Ve0AuYDPPMeFXCRKlX1_WHTpUvA',
-# }
-
-# REST_FRAMEWORK = {
-#     'DEFAULT_AUTHENTICATION_CLASSES': [
-#         'rest_framework.authentication.SessionAuthentication',  
-#     ],
-#     'DEFAULT_PERMISSION_CLASSES': [
-#         'rest_framework.permissions.IsAuthenticated',
-#     ]
-# }
-
-
-
-# DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-
-
-# CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
-# CRISPY_TEMPLATE_PACK = "bootstrap5"
-
-# MIDDLEWARE = [
-#     'corsheaders.middleware.CorsMiddleware',
-#     'django.middleware.security.SecurityMiddleware',
-#     'django.contrib.sessions.middleware.SessionMiddleware',
-#     'django.middleware.common.CommonMiddleware',
-#     'django.middleware.csrf.CsrfViewMiddleware',
-#     'django.contrib.auth.middleware.AuthenticationMiddleware',
-#     'django.contrib.messages.middleware.MessageMiddleware',
-#     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-#      'whitenoise.middleware.WhiteNoiseMiddleware',
-# ]
-# CORS_ALLOW_CREDENTIALS = True  
-# CORS_ALLOWED_ORIGINS = [
-#     "http://localhost:5173", 
-#     "http://localhost:5174",
-#     "https://hr-frontend-nbkexoywm-lisha183s-projects.vercel.app",
-#     "https://hr-frontend-vymh-dd5xi82t7-lisha183s-projects.vercel.app",
-#     "https://hr-frontend-vymh-8nzd85qmi-lisha183s-projects.vercel.app",
-#     "https://hr-frontend-vymh-1fsq9yc5j-lisha183s-projects.vercel.app",
-#     "https://hr-frontend-vymh-orwuh83w6-lisha183s-projects.vercel.app",
-#     "https://hr-frontend-vymh-kxhnjale6-lisha183s-projects.vercel.app",
-#     "https://hr-frontend-vymh-1enyjb7xn-lisha183s-projects.vercel.app"
-   
-# ]
-# # CORS_ALLOW_ALL_ORIGINS = True
-# CSRF_TRUSTED_ORIGINS = [
-#     "http://localhost:5173", 
-#     "http://127.0.0.1:8000",
-#     "http://localhost:5174",
-#     "https://hr-frontend-vymh-kaiyperuc-lisha183s-projects.vercel.app",
-#     "https://hr-frontend-vymh-dd5xi82t7-lisha183s-projects.vercel.app",
-#     "https://hr-frontend-vymh-8nzd85qmi-lisha183s-projects.vercel.app",
-#     "https://hr-frontend-vymh-1fsq9yc5j-lisha183s-projects.vercel.app",
-#     "https://hr-frontend-vymh-orwuh83w6-lisha183s-projects.vercel.app",
-#     "https://hr-frontend-vymh-kxhnjale6-lisha183s-projects.vercel.app",
-#     "https://hr-frontend-vymh-1enyjb7xn-lisha183s-projects.vercel.app"
-
-
-# ]
-# CORS_ALLOW_HEADERS = [
-#     'content-type',
-#     'x-csrftoken',
-#     'authorization',
-#     'accept',
-#     'origin',
-#     'user-agent',
-#     'accept-encoding',
-#     'accept-language',
-#     'dnt',
-#     'cache-control',
-#     'x-requested-with',
-# ]
-
-# CORS_EXPOSE_HEADERS = [
-#     'Content-Type',
-#     'X-CSRFToken',
-# ]
-
-# ROOT_URLCONF = 'myproject.urls'
-
-# TEMPLATES = [
-#     {
-#         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-#         'DIRS': [],
-#         'APP_DIRS': True,
-#         'OPTIONS': {
-#             'context_processors': [
-#                 'django.template.context_processors.request',
-#                 'django.contrib.auth.context_processors.auth',
-#                 'django.contrib.messages.context_processors.messages',
-#             ],
-#         },
-#     },
-# ]
-
-# WSGI_APPLICATION = 'myproject.wsgi.application'
-
-
-# # Database
-# # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
-# DATABASES = {
-#     'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))
-# }
-
-# # DATABASES = {
-# #     'default': dj_database_url.parse("postgresql://hr_ppx1_user:0ZgbhSucRI4NX138ZumPANaSvJs9hxuj@dpg-d1mp4824d50c738kqf3g-a.oregon-postgres.render.com/hr_ppx1")
-# # }
-
-# # DATABASES = {
-# #     'default': dj_database_url.parse("postgresql://photo_hub_l1kt_user:i43WP24xEaG9jfQ1tKrp9TdwIXSEjW7r@dpg-d0tkrl6mcj7s73dllpp0-a.oregon-postgres.render.com/photo_hub_l1kt")
-# # # }
-# # DATABASES = {
-# #     'default': {
-# #         'ENGINE': 'django.db.backends.postgresql',
-# #         'NAME': 'hr',
-# #         'USER': 'alicia',
-# #         'PASSWORD': '123456',
-# #         'HOST': 'localhost',
-# #         'PORT': '5432',
-# #     }
-# # }
-
-
-# AUTH_PASSWORD_VALIDATORS = [
-#     {
-#         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-#     },
-#     {
-#         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-#     },
-#     {
-#         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-#     },
-#     {
-#         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-#     },
-# ]
-
-
-
-# LANGUAGE_CODE = 'en-us'
-
-# TIME_ZONE = 'UTC'
-
-# USE_I18N = True
-
-# USE_TZ = True
-
-
-# STATIC_URL = '/static/'
-# STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
-# STATIC_ROOT = BASE_DIR / 'staticfiles'
-# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
-# TEMPLATES[0]['DIRS'] = [os.path.join(BASE_DIR, 'templates')]
-
-# DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-# AUTH_USER_MODEL = 'myapp.CustomUser'
-# MEDIA_URL = '/media/' 
-
-
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-
-
-# EMAIL_HOST = 'sandbox.smtp.mailtrap.io' 
-# EMAIL_PORT = 587                 
-# EMAIL_USE_TLS = True              
-# EMAIL_HOST_USER = '15216b6f087242'
-# EMAIL_HOST_PASSWORD = '51cfdda9f2ae7f'
-
-# DEFAULT_FROM_EMAIL = 'info@myhrportal.local'
-# SERVER_EMAIL = DEFAULT_FROM_EMAIL 
-# BASE_URL = 'http://localhost:5173'
 
 from pathlib import Path
 import os
@@ -239,28 +21,22 @@ import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# --- SECURITY & ENVIRONMENT VARIABLES ---
-SECRET_KEY = os.environ.get('SECRET_KEY', 'your-insecure-default-for-local-dev-only') # IMPORTANT: Change this default!
+SECRET_KEY = os.environ.get('SECRET_KEY', 'your-insecure-default-for-local-dev-only') 
 
-DEBUG = os.environ.get('DEBUG', 'False') == 'True' # Read DEBUG from env var
+DEBUG = os.environ.get('DEBUG', 'False') == 'True' 
 
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
 SECURE_SSL_REDIRECT = True
 
-# For cross-site cookie sending (React frontend on Vercel, Django backend on Render)
 CSRF_COOKIE_SAMESITE = 'None'
-SESSION_COOKIE_SAMESITE = 'None' # Changed from 'Lax'
-
-# IMPORTANT: Replace '*' with your actual Render backend hostname(s)
+SESSION_COOKIE_SAMESITE = 'None' 
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
-    'hr-backend-xs34.onrender.com', # Replace with your actual Render backend URL
-    # Add any custom domains for your backend here, e.g., 'api.yourhrplatform.com'
+    'hr-backend-xs34.onrender.com', 
 ]
 
-# --- CLOUDINARY CONFIGURATION ---
 CLOUDINARY_CLOUD_NAME = os.environ.get('CLOUDINARY_CLOUD_NAME')
 CLOUDINARY_API_KEY = os.environ.get('CLOUDINARY_API_KEY')
 CLOUDINARY_API_SECRET = os.environ.get('CLOUDINARY_API_SECRET')
@@ -279,7 +55,6 @@ CLOUDINARY_STORAGE = {
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 
-# --- EMAIL CONFIGURATION ---
 EMAIL_HOST = os.environ.get('EMAIL_HOST', 'sandbox.smtp.mailtrap.io')
 EMAIL_PORT = int(os.environ.get('EMAIL_PORT', 587))
 EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', 'True') == 'True'
@@ -289,11 +64,9 @@ EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'info@myhrportal.local')
 SERVER_EMAIL = DEFAULT_FROM_EMAIL
 
-# Frontend URL for things like password reset links in emails
 BASE_URL = os.environ.get('FRONTEND_BASE_URL', 'http://localhost:5173')
 
 
-# --- REST OF YOUR SETTINGS ---
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -323,7 +96,7 @@ CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware', # Moved up
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -337,9 +110,6 @@ CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://localhost:5174",
-    # Add all your Vercel frontend URLs here.
-    # It's better to manage these dynamically if you have many,
-    # or use a wildcard if you're sure about security (e.g., for subdomains)
     "https://hr-frontend-nbkexoywm-lisha183s-projects.vercel.app",
     "https://hr-frontend-vymh-dd5xi82t7-lisha183s-projects.vercel.app",
     "https://hr-frontend-vymh-8nzd85qmi-lisha183s-projects.vercel.app",
@@ -348,15 +118,13 @@ CORS_ALLOWED_ORIGINS = [
     "https://hr-frontend-vymh-kxhnjale6-lisha183s-projects.vercel.app",
     "https://hr-frontend-vymh-1enyjb7xn-lisha183s-projects.vercel.app",
     "https://hr-frontend-i2q5.vercel.app"
-    # If you have a custom domain for your frontend:
-    # "https://www.yourhrplatform.com",
+
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5173",
-    "http://127.0.0.1:8000", # This is for local Django dev server
+    "http://127.0.0.1:8000", 
     "http://localhost:5174",
-    # Add all your Vercel frontend URLs here.
     "https://hr-frontend-nbkexoywm-lisha183s-projects.vercel.app",
     "https://hr-frontend-vymh-dd5xi82t7-lisha183s-projects.vercel.app",
     "https://hr-frontend-vymh-8nzd85qmi-lisha183s-projects.vercel.app",
@@ -365,8 +133,7 @@ CSRF_TRUSTED_ORIGINS = [
     "https://hr-frontend-vymh-kxhnjale6-lisha183s-projects.vercel.app",
     "https://hr-frontend-vymh-1enyjb7xn-lisha183s-projects.vercel.app",
     "https://hr-frontend-i2q5.vercel.app"
-    # If you have a custom domain for your frontend:
-    # "https://www.yourhrplatform.com",
+  
 ]
 
 CORS_ALLOW_HEADERS = [
