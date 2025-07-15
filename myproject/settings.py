@@ -115,7 +115,8 @@ CORS_ALLOWED_ORIGINS = [
     "https://hr-frontend-x43g.vercel.app",
     "https://hr-frontend-68ju.vercel.app",
     "https://hr-frontend-us1v.vercel.app",
-    "https://hr-frontend-htjf.vercel.app"
+    "https://hr-frontend-htjf.vercel.app",
+    "https://hr-frontend-qpq5.vercel.app"
 
 ]
 
@@ -129,7 +130,8 @@ CSRF_TRUSTED_ORIGINS = [
     "https://hr-frontend-x43g.vercel.app",
     "https://hr-frontend-68ju.vercel.app",
     "https://hr-frontend-us1v.vercel.app",
-    "https://hr-frontend-htjf.vercel.app"
+    "https://hr-frontend-htjf.vercel.app",
+    "https://hr-frontend-qpq5.vercel.app"
   
 ]
 
