@@ -131,7 +131,9 @@ CORS_ALLOWED_ORIGINS = [
     "https://hr-frontend-ybp3.vercel.app",
     "https://hr-frontend-84rk.vercel.app",
     "https://hr-frontend-o6tb.vercel.app",
-    "https://hr-frontend-nine.vercel.app"
+    "https://hr-frontend-nine.vercel.app",
+    "https://hr-frontend-us1v-hwe5y4t3r-lisha183s-projects.vercel.app",
+
 
 ]
 
