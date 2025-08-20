@@ -134,7 +134,8 @@ CORS_ALLOWED_ORIGINS = [
     "https://hr-frontend-nine.vercel.app",
     "https://hr-frontend-us1v-hwe5y4t3r-lisha183s-projects.vercel.app",
     "https://hr-frontend-us1v-8xwxu6z88-lisha183s-projects.vercel.app",
-    "https://hr-frontend-us1v-lngxs48pv-lisha183s-projects.vercel.app"
+    "https://hr-frontend-us1v-lngxs48pv-lisha183s-projects.vercel.app",
+    "https://hr-frontend-us1v-bt4aly9to-lisha183s-projects.vercel.app"
 
 
 ]
@@ -158,7 +159,8 @@ CSRF_TRUSTED_ORIGINS = [
     "https://hr-frontend-nine.vercel.app",
     "https://hr-frontend-us1v-hwe5y4t3r-lisha183s-projects.vercel.app",
     "https://hr-frontend-us1v-8xwxu6z88-lisha183s-projects.vercel.app",
-    "https://hr-frontend-us1v-lngxs48pv-lisha183s-projects.vercel.app"
+    "https://hr-frontend-us1v-lngxs48pv-lisha183s-projects.vercel.app",
+    "https://hr-frontend-us1v-bt4aly9to-lisha183s-projects.vercel.app"
 
   
 ]
