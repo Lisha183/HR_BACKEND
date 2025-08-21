@@ -63,15 +63,14 @@ CLOUDINARY_STORAGE = {
     'API_SECRET': CLOUDINARY_API_SECRET,
 }
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "sandbox.smtp.mailtrap.io"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = "15216b6f087242"  
+EMAIL_HOST_PASSWORD = "51cfdda9f2ae7f"  
 
-
-EMAIL_HOST = os.environ.get('EMAIL_HOST', 'sandbox.smtp.mailtrap.io')
-EMAIL_PORT = int(os.environ.get('EMAIL_PORT', 587))
-EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', 'True') == 'True'
-EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
-
-DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'info@myhrportal.local')
+DEFAULT_FROM_EMAIL = "info@myhrportal.local"
 SERVER_EMAIL = DEFAULT_FROM_EMAIL
 
 BASE_URL = os.environ.get('FRONTEND_BASE_URL', 'http://localhost:5173')
@@ -140,7 +139,8 @@ CORS_ALLOWED_ORIGINS = [
     "https://hr-frontend-us1v-6oen0gd0a-lisha183s-projects.vercel.app",
     "https://hr-frontend-us1v-e6k64kpgq-lisha183s-projects.vercel.app",
     "https://hr-frontend-zpxm-flame.vercel.app",
-    "https://hr-frontend-zpxm-ht2vvc2yc-lisha183s-projects.vercel.app"
+    "https://hr-frontend-zpxm-ht2vvc2yc-lisha183s-projects.vercel.app", 
+    "https://hr-frontend-527e.vercel.app"
 
 
 ]
@@ -170,7 +170,8 @@ CSRF_TRUSTED_ORIGINS = [
     "https://hr-frontend-us1v-6oen0gd0a-lisha183s-projects.vercel.app",
     "https://hr-frontend-us1v-e6k64kpgq-lisha183s-projects.vercel.app",
     "https://hr-frontend-zpxm-flame.vercel.app",
-    "https://hr-frontend-zpxm-ht2vvc2yc-lisha183s-projects.vercel.app"
+    "https://hr-frontend-zpxm-ht2vvc2yc-lisha183s-projects.vercel.app",
+    "https://hr-frontend-527e.vercel.app"
 
   
 ]
